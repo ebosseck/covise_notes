@@ -1,0 +1,62 @@
+\documentclass[12pt,pdftex,a4paper]{scrbook}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[pdftex]{graphicx}
+\usepackage{amsfonts}
+\usepackage{listings}
+\usepackage[table]{xcolor}
+\usepackage{tcolorbox}
+
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+
+\usepackage{hyperref}
+\usepackage{colortbl}
+\usepackage{multirow}
+
+\usepackage{longtable}
+
+\input{res/theme.tex}
+
+\setcounter{tocdepth}{5}
+\setcounter{secnumdepth}{5}
+
+\newcommand{\namespace}{}
+\newcommand{\resolveNS}[1]{\namespace#1}
+\newcommand{\seclbl}[1]{\label{\resolveNS{#1}}}
+\newcommand{\secnref}[1]{\nameref{\resolveNS{#1}}}
+
+
+\begin{document}
+	\thispagestyle{empty}
+	\title{Covise}
+	\subtitle{Notes}
+	\author{}
+	\maketitle
+	
+	\newpage
+	\tableofcontents
+
+	\part{Kernel}
+	
+	\chapter{net}
+	
+	\input{Modules/kernel/net.tex}
+	
+	\chapter{vrb}
+
+	\part{Remarks}
+
+	\chapter{Protocols}
+
+	\begin{itemize}
+		\item In order to ensure format compatibility, the code has to be compiled with a c++ compiler which implements 'int' as 32-bit value, correct ? Otherwise, the byte offsets in the protocol defined in net would not match the expectations. (e.g. in headder of udp messages)
+		\begin{itemize}
+			\item int's are per definition IEEE int's with 4 bytes
+		\end{itemize}
+		\item Why should the sender ID not exceed 3 bytes ? Looking at the protocol, there should be 4 bytes available in the protocol (both UDPMessage as well as regular Messages). 
+	\end{itemize}
+
+\end{document}
