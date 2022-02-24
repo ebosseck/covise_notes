@@ -1,0 +1,192 @@
+\definecolor{HEADDER}{rgb}{0.9, 0.9, 1}
+\definecolor{ODD}{gray}{1.0} 
+\definecolor{EVEN}{gray}{0.9}
+
+\definecolor{hint.info}      {rgb} {0, 0, 1}
+\definecolor{hint.example}   {rgb} {0, 1, 0} 
+\definecolor{hint.important} {rgb} {1, 0, 0}
+\definecolor{marking}{rgb}{0.6, 0, 0}
+
+\definecolor{prim.head} {rgb} {.6, .6, .6}
+\definecolor{prim.light} {rgb} {.8, .8, .8}
+\definecolor{prim.dark} {rgb} {1, 1, 1}
+
+\definecolor{send.head} {rgb} {.5, 1, .5}
+\definecolor{send.light} {rgb} {.6, 1, .6}
+\definecolor{send.dark} {rgb} {.8, 1, .8}
+
+\definecolor{recv.head} {rgb} {1, .5, .5}
+\definecolor{recv.light} {rgb} {1, .6, .6}
+\definecolor{recv.dark} {rgb} {1, .8, .8}
+
+\definecolor{evnt.head} {rgb} {1, 1, .5}
+\definecolor{evnt.light} {rgb} {1, 1, .6}
+\definecolor{evnt.dark} {rgb} {1, 1, .8}
+
+\definecolor{typedef.head} {rgb} {.5, .5, 1}
+\definecolor{typedef.light} {rgb} {.6, .6, 1}
+\definecolor{typedef.dark} {rgb} {.8, .8, 1}
+
+\newenvironment{info}{\begin{tcolorbox}[colback=hint.info!2,colframe=hint.info!70!black,title=\textsc{Info}]}{\end{tcolorbox}}
+\newenvironment{infocont}{\begin{tcolorbox}[colback=hint.info!2,colframe=hint.info!70!black,title=\textsc{Info (Cont.)}]}{\end{tcolorbox}}
+\newenvironment{wichtig}{\begin{tcolorbox}[colback=hint.important!2,colframe=hint.important!70!black,title=\textsc{Important}]}{\end{tcolorbox}}
+\newenvironment{beispiel}{\begin{tcolorbox}[colback=hint.example!2,colframe=hint.example!70!black,title=\textsc{Example}]}{\end{tcolorbox}}
+
+\newenvironment{beispielcont}{\begin{tcolorbox}[colback=hint.example!2,colframe=hint.example!70!black,title=\textsc{Example (Cont.)}]}{\end{tcolorbox}}
+
+\newenvironment{additional}{}{}
+
+\newcommand{\therequest}{}
+
+\newenvironment{request}[1]{\renewcommand{\therequest}{#1}\subsubsection{#1}}{}
+
+\newenvironment{send}{\rowcolors{2}{send.light}{send.dark}\paragraph*{Request}\mbox{}\\
+	\begin{longtable}{||p{4cm}|p{3cm}|p{7cm}||}
+		\rowcolor{send.head} \hline \textbf{Name} & \textbf{Type}& \textbf{Description} \\
+		\hline\hline
+		\param{request}{str}{Request Type (''\texttt{\therequest}'')}
+		\param{messageid}{str}{Message ID, this parameter is mirrored by the server}
+	}{\end{longtable}}
+
+\newenvironment{recv}{\rowcolors{2}{recv.light}{recv.dark}\paragraph*{Response}\mbox{}\\
+	\begin{longtable}{||p{4cm}|p{3cm}|p{7cm}||}
+		\rowcolor{recv.head} \hline \textbf{Name} & \textbf{Type}& \textbf{Description} \\ \hline\hline
+		\param{messageid}{str}{Message ID, this parameter is mirrored by the server}}{\end{longtable}}
+
+\newenvironment{evnt}{\rowcolors{2}{evnt.light}{evnt.dark}\paragraph*{Message}\mbox{}\\
+	\begin{longtable}{||p{4cm}|p{3cm}|p{7cm}||}
+		\rowcolor{evnt.head} \hline \textbf{Name} & \textbf{Type}& \textbf{Description} \\ \hline\hline
+		\param{event}{str}{Name of this event}
+		\param{source}{str}{Source of this event}}{\end{longtable}}
+
+\newenvironment{type}[1]{\renewcommand{\therequest}{#1}\subsection{#1}}{}
+
+\newenvironment{typedef}{\rowcolors{2}{typedef.light}{typedef.dark}
+	\begin{longtable}{||p{4cm}|p{3cm}|p{7cm}||}
+		\rowcolor{typedef.head} \hline \textbf{Name} & \textbf{Type}& \textbf{Description} \\ \hline\hline}{\end{longtable}}
+
+\newcommand{\param}[3]{\texttt{#1} & \textsl{#2} & #3 \\\hline}
+\newcommand{\primitive}[2]{\textsl{#1} & #2 \\\hline}
+
+\newcommand{\triggers}[1]{\textbf{Triggers Event:} #1}
+
+
+
+\newcommand{\keyword}[1]{\textbf{\color{marking}#1}}
+\newcommand{\figref}[1]{Figure~\ref{#1}}
+\newcommand{\todo}[1]{\textbf{\color{red}TODO: #1}}
+
+\newcommand{\sitem}[1]{\begin{itemize}
+		\item #1
+\end{itemize}}
+
+\newcommand{\plang}[1]{\textit{#1}}
+
+\newcommand*{\pdfimg}[2]{
+	{\centering
+		\includegraphics[width=#1\textwidth]{fig/fig_#2.pdf}}
+}
+
+\newcommand*{\pdffig}[3]{\begin{figure}[h!]
+		\centering
+		\includegraphics[width=#1\textwidth]{fig/fig_#2.pdf}
+		\caption{%
+			#3
+		}
+		\label{fig:fig_#2}
+\end{figure}}
+
+\newcommand{\sidebyside}[2]{\begin{minipage}{0.45\textwidth}
+		#1
+	\end{minipage} \hspace{0.1\textwidth}
+	\begin{minipage}{0.45\textwidth}
+		#2
+\end{minipage}}
+
+\newcommand*{\pdffigs}[4]{\begin{figure}[h!]
+		\centering
+		\includegraphics[width=#1\textwidth]{fig/fig_#2.pdf}
+		\includegraphics[width=#1\textwidth]{fig/fig_#3.pdf}
+		\caption{%
+			#4
+		}
+		\label{fig:fig_#2}
+\end{figure}}
+
+\setcounter{MaxMatrixCols}{20}
+%\rowcolors{2}{EVEN}{ODD}
+\newcommand{\mathbox}[1]{\text{\fbox{$\displaystyle#1$}}}
+
+%#################################
+%#####      LSTLISTINGS      #####
+%#################################
+
+
+\lstset{ 
+	backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}; should come as last argument
+	basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+	breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+	breaklines=true,                 % sets automatic line breaking
+	captionpos=b,                    % sets the caption-position to bottom
+	commentstyle=\color{green!60!black},      % comment style
+	deletekeywords={...},            % if you want to delete keywords from the given language
+	escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+	extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+	frame=all,	                 % adds a frame around the code
+	keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+	keywordstyle=\color{violet},     % keyword style
+	language=C,                 	 % the language of the code
+	morekeywords={*,..., fi, do, od, return, then},            % if you want to add more keywords to the set
+	numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+	numbersep=5pt,                   % how far the line-numbers are from the code
+	numberstyle=\tiny\color{gray},   % the style that is used for the line-numbers
+	rulecolor=\color{black!50},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+	showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+	showstringspaces=false,          % underline spaces within strings only
+	showtabs=false,                  % show tabs within strings adding particular underscores
+	stepnumber=1,                    % the step between two line-numbers. If it's 1, each line will be numbered
+	stringstyle=\color{blue},        % string literal style
+	tabsize=2,	                     % sets default tabsize to 2 spaces
+	title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+
+
+\lstdefinelanguage
+[x64]{Assembler}     % add a "x64" dialect of Assembler
+[x86masm]{Assembler} % based on the "x86masm" dialect
+% with these extra keywords:
+{morekeywords={CDQE,CQO,CMPSQ,CMPXCHG16B,JRCXZ,LODSQ,MOVSXD, %
+		POPFQ,PUSHFQ,SCASQ,STOSQ,IRETQ,RDTSCP,SWAPGS, %
+		rax,rdx,rcx,rbx,rsi,rdi,rsp,rbp, %
+		r8,r8d,r8w,r8b,r9,r9d,r9w,r9b, %
+		r10,r10d,r10w,r10b,r11,r11d,r11w,r11b, %
+		r12,r12d,r12w,r12b,r13,r13d,r13w,r13b, %
+		r14,r14d,r14w,r14b,r15,r15d,r15w,r15b}} % etc.
+
+\lstdefinelanguage{JavaScript}{
+	keywords={break, case, catch, continue, debugger, default, delete, do, else, finally, for, function, if, in, instanceof, new, return, switch, this, throw, try, typeof, var, void, while, with},
+	morecomment=[l]{//},
+	morecomment=[s]{/*}{*/},
+	morestring=[b]',
+	morestring=[b]",
+	sensitive=true
+}
+
+\lstdefinelanguage{Scheme}{
+	keywords={define, lambda},
+	morekeywords=[1]{define, define-syntax, define-macro, lambda, define-stream, stream-lambda},
+	morekeywords=[2]{begin, call-with-current-continuation, call/cc,
+		call-with-input-file, call-with-output-file, case, cond,
+		do, else, for-each, if,
+		let*, let, let-syntax, letrec, letrec-syntax,
+		let-values, let*-values,
+		and, or, not, delay, force,
+		quasiquote, quote, unquote, unquote-splicing,
+		map, fold, syntax, syntax-rules, eval, environment, query, car, cdr, cons, set!, set-car!, set-cdr!},
+	morekeywords=[3]{import, export},
+	morecomment=[l]{;},
+	morecomment=[s]{\#|}{|\#},
+	alsodigit=!\$\%&*+-./:<=>?@^_~,
+	literate=*{`}{{`}}{1},
+	sensitive=true
+}

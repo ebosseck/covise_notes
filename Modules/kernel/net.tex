@@ -1,0 +1,292 @@
+\renewcommand{\namespace}{kernel::net::}
+
+
+\newenvironment{messagetypes}{\rowcolors{2}{evnt.light}{evnt.dark}\mbox{}\\
+	\begin{longtable}{||p{7.4cm}|p{.5cm}|p{6cm}||} 
+		\rowcolor{evnt.head} \hline \textbf{Name} & \textbf{ID} & \textbf{Comment} \\ \hline\hline}{\end{longtable}}
+
+\newenvironment{messagedesc}{\rowcolors{2}{evnt.light}{evnt.dark}\mbox{}\\
+	\begin{longtable}{||p{3.4cm}|p{2.5cm}|p{8cm}||}
+		\rowcolor{evnt.head} \hline \textbf{Name} & \textbf{Length} & \textbf{Comment} \\ \hline\hline}{\end{longtable}}
+
+\newcommand{\messageType}[3]{\lstinline|#1| & #2 & #3 \\
+	\hline}
+
+The net folder contains basic classes related to establishing connections between client and server using sockets.
+
+\section{Protocol}
+\seclbl{protocol}
+
+\subsection{Overview}
+
+TCP Connection for regular messages, UDP Connection for UDP Messages, Optional with SSL Encryption (at least for regular messages, possibly for both). Also there has to exist a way to exchange data on the machine via shared memory.
+
+There exist at least 2 distinct message types: Messages and UDP Messages. UDP Messages are regular messages with a stripped down header sent using the udp protocol (UDP Messages were introduced in May 2019, while regular messages exist since 1993).
+
+The Default port used is 31000.
+
+
+
+\subsection{Message}
+\seclbl{protocol::message}
+
+\subsubsection{Message Format}
+\seclbl{protocol::message::message-format}
+Defined in \secnref{classes::message}
+
+Each Message contains the following:
+
+\begin{messagedesc}
+	\messageType{sender}{3 byte}{Sender of message, max 3 bytes}
+	\messageType{send_type}{int}{Sender Type, defaults to UNDEFINED, actual size depending on Architecture and Compiler. Should be 4 bytes on most modern systems, but could be 2. For a list of valid values, see \secnref{protocol::message::sender-types}}
+	\messageType{type}{int}{Message Type, defaults to EMPTY, actual size depending on Architecture and Compiler. Should be 4 bytes on most modern systems, but could be 2. For a list of valid values, see \secnref{protocol::message::message-types}}
+	\messageType{data}{}{Bytes containing custom data}
+\end{messagedesc}
+
+More specifically, the Header consists of 4 IEEE ints (16 bytes):
+
+\begin{itemize}
+	\item[[0:3]] sender
+	\item[[4:7]] senderType
+	\item[[8:11]] messageType
+	\item[[12:15]] dataLength - Length of data in bytes
+\end{itemize}
+
+
+
+\subsubsection{Message Types}
+\seclbl{protocol::message::message-types}
+Defined in \secnref{classes::message-types}
+
+\begin{messagetypes}
+	\messageType{EMPTY}{-1}{}
+	\messageType{MSG_FAILED}{0}{}
+	\messageType{MSG_OK}{1}{}
+	\messageType{INIT}{2}{}
+	\messageType{FINISHED}{3}{}
+	\messageType{SEND}{4}{}
+	\messageType{ALLOC}{5}{}
+	\messageType{UI}{6}{}
+	\messageType{APP_CONTACT_DM}{7}{}
+	\messageType{DM_CONTACT_DM}{8}{}
+	\messageType{SHM_MALLOC}{9}{}
+	\messageType{SHM_MALLOC_LIST}{10}{}
+	\messageType{MALLOC_OK}{11}{}
+	\messageType{MALLOC_LIST_OK}{12}{}
+	\messageType{MALLOC_FAILED}{13}{}
+	\messageType{PREPARE_CONTACT}{14}{}
+	\messageType{PREPARE_CONTACT_DM}{15}{}
+	\messageType{PORT}{16}{}
+	\messageType{GET_SHM_KEY}{17}{}
+	\messageType{NEW_OBJECT}{18}{}
+	\messageType{GET_OBJECT}{19}{}
+	\messageType{REGISTER_TYPE}{20}{}
+	\messageType{NEW_SDS}{21}{}
+	\messageType{SEND_ID}{22}{}
+	\messageType{ASK_FOR_OBJECT}{23}{}
+	\messageType{OBJECT_FOUND}{24}{}
+	\messageType{OBJECT_NOT_FOUND}{25}{}
+	\messageType{HAS_OBJECT_CHANGED}{26}{}
+	\messageType{OBJECT_UPDATE}{27}{}
+	\messageType{OBJECT_TRANSFER}{28}{}
+	\messageType{OBJECT_FOLLOWS}{29}{}
+	\messageType{OBJECT_OK}{30}{}
+	\messageType{CLOSE_SOCKET}{31}{}
+	\messageType{DESTROY_OBJECT}{32}{}
+	\messageType{CTRL_DESTROY_OBJECT}{33}{}
+	\messageType{QUIT}{34}{}
+	\messageType{START}{35}{}
+	\messageType{COVISE_ERROR}{36}{}
+	\messageType{INOBJ}{37}{}
+	\messageType{OUTOBJ}{38}{}
+	\messageType{OBJECT_NO_LONGER_USED}{39}{}
+	\messageType{SET_ACCESS}{40}{}
+	\messageType{FINALL}{41}{}
+	\messageType{ADD_OBJECT}{42}{}
+	\messageType{DELETE_OBJECT}{43}{}
+	\messageType{NEW_OBJECT_VERSION}{44}{}
+	\messageType{RENDER}{45}{}
+	\messageType{WAIT_CONTACT}{46}{}
+	\messageType{PARINFO}{47}{}
+	\messageType{MAKE_DATA_CONNECTION}{48}{}
+	\messageType{COMPLETE_DATA_CONNECTION}{49}{}
+	\messageType{SHM_FREE}{50}{}
+	\messageType{GET_TRANSFER_PORT}{51}{}
+	\messageType{TRANSFER_PORT}{52}{}
+	\messageType{CONNECT_TRANSFERMANAGER}{53}{}
+	\messageType{STDINOUT_EMPTY}{54}{}
+	\messageType{WARNING}{55}{}
+	\messageType{INFO}{56}{}
+	\messageType{REPLACE_OBJECT}{57}{}
+	\messageType{PLOT}{58}{}
+	\messageType{GET_LIST_OF_INTERFACES}{59}{}
+	\messageType{USR1}{60}{}
+	\messageType{USR2}{61}{}
+	\messageType{USR3}{62}{}
+	\messageType{USR4}{63}{}
+	\messageType{NEW_OBJECT_OK}{64}{}
+	\messageType{NEW_OBJECT_FAILED}{65}{}
+	\messageType{NEW_OBJECT_SHM_MALLOC_LIST}{66}{}
+	\messageType{REQ_UI}{67}{}
+	\messageType{NEW_PART_ADDED}{68}{}
+	\messageType{SENDING_NEW_PART}{69}{}
+	\messageType{FINPART}{70}{}
+	\messageType{NEW_PART_AVAILABLE}{71}{}
+	\messageType{OBJECT_ON_HOSTS}{72}{}
+	\messageType{OBJECT_FOLLOWS_CONT}{73}{}
+	\messageType{CRB_EXEC}{74}{}
+	\messageType{COVISE_STOP_PIPELINE}{75}{}
+	\messageType{PREPARE_CONTACT_MODULE}{76}{}
+	\messageType{MODULE_CONTACT_MODULE}{77}{}
+	\messageType{SEND_APPL_PROCID}{78}{}
+	\messageType{INTERFACE_LIST}{79}{}
+	\messageType{MODULE_LIST}{80}{}
+	\messageType{HOSTID}{81}{}
+	\messageType{MODULE_STARTED}{82}{}
+	\messageType{GET_USER}{83}{}
+	\messageType{SOCKET_CLOSED}{84}{}
+	\messageType{NEW_COVISED}{85}{}
+	\messageType{USER_LIST}{86}{}
+	\messageType{STARTUP_INFO}{87}{}
+	\messageType{CO_MODULE}{88}{}
+	\messageType{WRITE_SCRIPT}{89}{}
+	\messageType{CRB}{90}{}
+	\messageType{GENERIC}{91}{}
+	\messageType{RENDER_MODULE}{92}{}
+	\messageType{FEEDBACK}{93}{}
+	\messageType{VRB_CONTACT}{94}{Anmeldung Client}
+	\messageType{VRB_CONNECT_TO_COVISE}{95}{}
+	\messageType{END_IMM_CB}{96}{}
+	\messageType{NEW_DESK}{97}{}
+	\messageType{VRB_SET_USERINFO}{98}{}
+	\messageType{VRB_GET_ID}{99}{}
+	\messageType{VRB_SET_GROUP}{100}{}
+	\messageType{VRB_QUIT}{101}{}
+	\messageType{VRB_SET_MASTER}{102}{}
+	\messageType{VRB_GUI}{103}{}
+	\messageType{VRB_CLOSE_VRB_CONNECTION}{104}{}
+	\messageType{VRB_REQUEST_FILE}{105}{}
+	\messageType{VRB_SEND_FILE}{106}{}
+	\messageType{VRB_CURRENT_FILE}{107}{}
+	\messageType{CRB_QUIT}{108}{}
+	\messageType{REMOVED_HOST}{109}{}
+	\messageType{START_COVER_SLAVE}{110}{}
+	\messageType{VRB_REGISTRY_ENTRY_CHANGED}{111}{}
+	\messageType{VRB_REGISTRY_ENTRY_DELETED}{112}{}
+	\messageType{VRB_REGISTRY_SUBSCRIBE_CLASS}{113}{}
+	\messageType{VRB_REGISTRY_SUBSCRIBE_VARIABLE}{114}{}
+	\messageType{VRB_REGISTRY_CREATE_ENTRY}{115}{}
+	\messageType{VRB_REGISTRY_SET_VALUE}{116}{}
+	\messageType{VRB_REGISTRY_DELETE_ENTRY}{117}{}
+	\messageType{VRB_REGISTRY_UNSUBSCRIBE_CLASS}{118}{}
+	\messageType{VRB_REGISTRY_UNSUBSCRIBE_VARIABLE}{119}{}
+	\messageType{SYNCHRONIZED_ACTION}{120}{}
+	\messageType{ACCESSGRID_DAEMON}{121}{}
+	\messageType{TABLET_UI}{122}{}
+	\messageType{QUERY_DATA_PATH}{123}{}
+	\messageType{SEND_DATA_PATH}{124}{}
+	\messageType{VRB_FB_RQ}{125}{}
+	\messageType{VRB_FB_SET}{126}{}
+	\messageType{VRB_FB_REMREQ}{127}{}
+	\messageType{UPDATE_LOADED_MAPNAME}{128}{}
+	\messageType{SSLDAEMON}{129}{}
+	\messageType{VISENSO_UI}{130}{}
+	\messageType{PARAMDESC}{131}{}
+	\messageType{VRB_REQUEST_NEW_SESSION}{132}{}
+	\messageType{VRBC_SET_SESSION}{133}{}
+	\messageType{VRBC_SEND_SESSIONS}{134}{}
+	\messageType{VRBC_CHANGE_SESSION}{135}{}
+	\messageType{VRBC_UNOBSERVE_SESSION}{136}{}
+	\messageType{VRB_SAVE_SESSION}{137}{}
+	\messageType{VRB_LOAD_SESSION}{138}{}
+	\messageType{VRB_MESSAGE}{139}{}
+	\messageType{VRB_PERMIT_LAUNCH}{140}{}
+	\messageType{BROADCAST_TO_PROGRAM}{141}{}
+	\messageType{NEW_UI}{142}{}
+	\messageType{PROXY}{143}{}
+	\messageType{SOUND}{144}{}
+	\messageType{LAST_DUMMY_MESSAGE}{145}{}
+\end{messagetypes}
+
+\subsubsection{Sender Types}
+\seclbl{protocol::message::sender-types}
+
+Defined in \secnref{classes::message-types}
+
+\begin{messagetypes}
+	\messageType{UNDEFINED}{0}{}
+	\messageType{CONTROLLER}{1}{}
+	\messageType{CRB}{2}{}
+	\messageType{USERINTERFACE}{3}{}
+	\messageType{RENDERER}{4}{}
+	\messageType{APPLICATIONMODULE}{5}{}
+	\messageType{TRANSFERMANAGER}{6}{}
+	\messageType{SIMPLEPROCESS}{7}{}
+	\messageType{SIMPLECONTROLLER}{8}{}
+	\messageType{STDINOUT}{9}{}
+	\messageType{COVISED}{10}{}
+	\messageType{VRB}{11}{}
+	\messageType{SENDER_SOUND}{12}{}
+	\messageType{ANY}{}{}
+\end{messagetypes}
+
+\subsection{UDP Message}
+\seclbl{protocol::udpmessage}
+
+\subsubsection{UDP Message Format}
+\seclbl{protocol::udpmessage::udpmessage-format}
+
+\begin{messagedesc}
+	\messageType{type}{int}{Type of UDP Message. For a list of valid values, see \secnref{protocol::udpmessage::udpmessage-types}}
+	\messageType{sender}{int}{Sender of message, sender $<$ 0 are invalid, sender 0 is the server and sender $>$ 0 are clients}
+	\messageType{data}{}{Bytes containing custom data}
+\end{messagedesc}
+
+More Precisely, the header of the message consists of 2 IEEE Ints (8 Bytes), consisting of first the type, and then the sender. This is followed by the data. The entire message (consisting of both header and data) must not exceed the defined (system dependend) Write buffer size. See \lstinline|WRITE_BUFFER_SIZE| in header file of \secnref{classes::covise-connect} for the maximum total packet size. At the time of Writing, this is 393216 byte on CRAY systems, and 64000 byte on all other systems.
+
+\subsubsection{UDP Message Types}
+\seclbl{protocol::udpmessage::udpmessage-types}
+
+\begin{messagetypes}
+	\messageType{EMPTY}{0}{}
+	\messageType{AVATAR_HMD_POSITION}{1}{}
+	\messageType{AVATAR_CONTROLLER_POSITION}{2}{}
+	\messageType{AUDIO_STREAM}{3}{}
+	\messageType{MIDI_STREAM}{4}{}
+\end{messagetypes}
+
+\section{Classes}
+\seclbl{classes}
+
+\subsection{covise\_connect}
+\seclbl{classes::covise-connect}
+
+Handles the socket connection 
+
+\subsection{message}
+\seclbl{classes::message}
+
+Definition of standart message
+
+\subsection{message\_types}
+\seclbl{classes::message-types}
+
+Definition of message- and sender- types 
+
+\subsection{udp\_message\_types}
+\seclbl{classes::udp-message}
+Definition of udp message- and sender- types 
+
+\subsection{udpMessage}
+\seclbl{classes::udp-message}
+Definition of udp message
+
+
+\subsubsection{Trivia}
+
+\begin{itemize}
+	\item File is inconsitently named using CamelCase instead of underscores as seperators
+\end{itemize}
+
+\subsection{udp\_message\_types}
+\seclbl{classes::udp-message-types}
