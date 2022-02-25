@@ -12,6 +12,9 @@
 \newcommand{\messageType}[3]{\lstinline|#1| & #2 & #3 \\
 	\hline}
 
+\newcommand{\messageTypeDep}[3]{\rowcolor{linedeprecated}\lstinline|#1| & #2 & \color{red}\textbf{!!! DEPRECATED !!! DO NOT USE !!!}\color{black}, #3 \\
+	\hline}
+
 The net folder contains basic classes related to establishing connections between client and server using sockets.
 
 \section{Lowlevel Protocol}
@@ -167,7 +170,7 @@ Defined in \secnref{classes::message-types}
 	\messageType{VRB_CLOSE_VRB_CONNECTION}{104}{}
 	\messageType{VRB_REQUEST_FILE}{105}{}
 	\messageType{VRB_SEND_FILE}{106}{}
-	\rowcolor{magenta!50!}\messageType{VRB_CURRENT_FILE}{107}{\color{green}\textbf{!!! DEPRECATED !!! DO NOT USE !!!}\color{black}, use \lstinline|COVISE_MESSAGE_VRB_REQUEST _FILE| and sharedState \lstinline|coVRFileManager_filePaths| instead. Should write to standard error, then abort execution. (See kernel/vrb/server/VrbMessageHandler.cpp)}
+	\messageTypeDep{VRB_CURRENT_FILE}{107}{use \lstinline|COVISE_MESSAGE_VRB_REQUEST _FILE| and sharedState \lstinline|coVRFileManager_filePaths| instead. Should write to standard error, then abort execution. (See kernel/vrb/server/VrbMessageHandler.cpp)}
 	\messageType{CRB_QUIT}{108}{}
 	\messageType{REMOVED_HOST}{109}{}
 	\messageType{START_COVER_SLAVE}{110}{}
