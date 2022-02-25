@@ -94,20 +94,20 @@ Defined in \secnref{classes::message-types}
 	\messageType{CLOSE_SOCKET}{31}{Should be ignored if send to the server (see src/sys/controller/handler.cpp, handleMsg, ln 246}
 	\messageType{DESTROY_OBJECT}{32}{}
 	\messageType{CTRL_DESTROY_OBJECT}{33}{}
-	\messageType{QUIT}{34}{QUIT message from user interface, opencover or other sources. Handled by server, depending on parameters. Quits the current session}
+	\messageType{QUIT}{34}{QUIT message from user interface, opencover or other sources. Handled by server, depending on parameters. Quits the current session. (see src/sys/controller/handler.cpp)}
 	\messageType{START}{35}{}
-	\messageType{COVISE_ERROR}{36}{Sent to all modules as \lstinline|COVISE_MESSAGE_COVISE_ERROR|. In case of error overflow, the info that there is overflow is sent instead}
+	\messageType{COVISE_ERROR}{36}{Sent to all modules as \lstinline|COVISE_MESSAGE_COVISE_ERROR|. In case of error overflow, the info that there is overflow is sent instead (see src/sys/controller/handler.cpp)}
 	\messageType{INOBJ}{37}{}
 	\messageType{OUTOBJ}{38}{}
 	\messageType{OBJECT_NO_LONGER_USED}{39}{}
 	\messageType{SET_ACCESS}{40}{}
-	\messageType{FINALL}{41}{Module says it has finished. Server Side resources are released, and server sends \lstinline|COVISE_MESSAGE_UI| with parameter ''FINISHED $\backslash n$'' in case no modules are running anymore}
+	\messageType{FINALL}{41}{Module says it has finished. Server Side resources are released, and server sends \lstinline|COVISE_MESSAGE_UI| with parameter ''FINISHED $\backslash n$'' in case no modules are running anymore (see src/sys/controller/handler.cpp)}
 	\messageType{ADD_OBJECT}{42}{}
 	\messageType{DELETE_OBJECT}{43}{}
 	\messageType{NEW_OBJECT_VERSION}{44}{}
-	\messageType{RENDER}{45}{Forwarded to all other renderers by the server}
+	\messageType{RENDER}{45}{Forwarded to all other renderers by the server (see src/sys/controller/handler.cpp)}
 	\messageType{WAIT_CONTACT}{46}{}
-	\messageType{PARINFO}{47}{send message to all userinterfaces}
+	\messageType{PARINFO}{47}{send message to all userinterfaces (see src/sys/controller/handler.cpp)}
 	\messageType{MAKE_DATA_CONNECTION}{48}{}
 	\messageType{COMPLETE_DATA_CONNECTION}{49}{}
 	\messageType{SHM_FREE}{50}{}
@@ -115,10 +115,10 @@ Defined in \secnref{classes::message-types}
 	\messageType{TRANSFER_PORT}{52}{}
 	\messageType{CONNECT_TRANSFERMANAGER}{53}{}
 	\messageType{STDINOUT_EMPTY}{54}{}
-	\messageType{WARNING}{55}{Messages are relayed as Error to all renderers. Data will be modified by prefix ''WARNING'' and suffix ''$\backslash n$''}
-	\messageType{INFO}{56}{Messages are relayed as Error to all renderers. Data will be modified by prefix ''INFO'' and suffix ''$\backslash n$''}
+	\messageType{WARNING}{55}{Messages are relayed as Error to all renderers. Data will be modified by prefix ''WARNING'' and suffix ''$\backslash n$'' (see src/sys/controller/handler.cpp)}
+	\messageType{INFO}{56}{Messages are relayed as Error to all renderers. Data will be modified by prefix ''INFO'' and suffix ''$\backslash n$'' (see src/sys/controller/handler.cpp)}
 	\messageType{REPLACE_OBJECT}{57}{}
-	\messageType{PLOT}{58}{Forwarded to all other renderers by the server}
+	\messageType{PLOT}{58}{Forwarded to all other renderers by the server (see src/sys/controller/handler.cpp)}
 	\messageType{GET_LIST_OF_INTERFACES}{59}{}
 	\messageType{USR1}{60}{}
 	\messageType{USR2}{61}{}
@@ -127,7 +127,7 @@ Defined in \secnref{classes::message-types}
 	\messageType{NEW_OBJECT_OK}{64}{}
 	\messageType{NEW_OBJECT_FAILED}{65}{}
 	\messageType{NEW_OBJECT_SHM_MALLOC_LIST}{66}{}
-	\messageType{REQ_UI}{67}{Relayed to all Userinterface types}
+	\messageType{REQ_UI}{67}{Relayed to all Userinterface types (see src/sys/controller/handler.cpp)}
 	\messageType{NEW_PART_ADDED}{68}{}
 	\messageType{SENDING_NEW_PART}{69}{}
 	\messageType{FINPART}{70}{}
@@ -135,7 +135,7 @@ Defined in \secnref{classes::message-types}
 	\messageType{OBJECT_ON_HOSTS}{72}{}
 	\messageType{OBJECT_FOLLOWS_CONT}{73}{}
 	\messageType{CRB_EXEC}{74}{}
-	\messageType{COVISE_STOP_PIPELINE}{75}{Sets the status of the module with the name from the parameters to stopping}
+	\messageType{COVISE_STOP_PIPELINE}{75}{Sets the status of the module with the name from the parameters to stopping (see src/sys/controller/handler.cpp)}
 	\messageType{PREPARE_CONTACT_MODULE}{76}{}
 	\messageType{MODULE_CONTACT_MODULE}{77}{}
 	\messageType{SEND_APPL_PROCID}{78}{}
@@ -144,16 +144,16 @@ Defined in \secnref{classes::message-types}
 	\messageType{HOSTID}{81}{}
 	\messageType{MODULE_STARTED}{82}{}
 	\messageType{GET_USER}{83}{}
-	\messageType{SOCKET_CLOSED}{84}{Should be ignored if send to the server (see src/sys/controller/handler.cpp, handleMsg, ln 246}
+	\messageType{SOCKET_CLOSED}{84}{Should be ignored if send to the server (see src/sys/controller/handler.cpp, handleMsg, ln 246 (see src/sys/controller/handler.cpp)}
 	\messageType{NEW_COVISED}{85}{}
 	\messageType{USER_LIST}{86}{}
 	\messageType{STARTUP_INFO}{87}{}
 	\messageType{CO_MODULE}{88}{}
 	\messageType{WRITE_SCRIPT}{89}{}
 	\messageType{CRB}{90}{}
-	\messageType{GENERIC}{91}{Evaluated for Keywords, and handled accordingly. Message Body is parsed}
-	\messageType{RENDER_MODULE}{92}{Forwarded to all other renderers by the server}
-	\messageType{FEEDBACK}{93}{Messages from Renderer sent to a module. Message is parsed and sent to the specified module}
+	\messageType{GENERIC}{91}{Evaluated for Keywords, and handled accordingly. Message Body is parsed (see src/sys/controller/handler.cpp)}
+	\messageType{RENDER_MODULE}{92}{Forwarded to all other renderers by the server (see src/sys/controller/handler.cpp)}
+	\messageType{FEEDBACK}{93}{Messages from Renderer sent to a module. Message is parsed and sent to the specified module (see src/sys/controller/handler.cpp)}
 	\messageType{VRB_CONTACT}{94}{Initialise connection from client}
 	\messageType{VRB_CONNECT_TO_COVISE}{95}{}
 	\messageType{END_IMM_CB}{96}{}
@@ -167,7 +167,7 @@ Defined in \secnref{classes::message-types}
 	\messageType{VRB_CLOSE_VRB_CONNECTION}{104}{}
 	\messageType{VRB_REQUEST_FILE}{105}{}
 	\messageType{VRB_SEND_FILE}{106}{}
-	\messageType{VRB_CURRENT_FILE}{107}{}
+	\rowcolor{magenta!50!}\messageType{VRB_CURRENT_FILE}{107}{\color{green}\textbf{!!! DEPRECATED !!! DO NOT USE !!!}\color{black}, use \lstinline|COVISE_MESSAGE_VRB_REQUEST _FILE| and sharedState \lstinline|coVRFileManager_filePaths| instead. Should write to standard error, then abort execution. (See kernel/vrb/server/VrbMessageHandler.cpp)}
 	\messageType{CRB_QUIT}{108}{}
 	\messageType{REMOVED_HOST}{109}{}
 	\messageType{START_COVER_SLAVE}{110}{}
@@ -188,7 +188,7 @@ Defined in \secnref{classes::message-types}
 	\messageType{VRB_FB_RQ}{125}{}
 	\messageType{VRB_FB_SET}{126}{}
 	\messageType{VRB_FB_REMREQ}{127}{}
-	\messageType{UPDATE_LOADED_MAPNAME}{128}{Relayed to all Userinterface types, MAKRO (''UPDATE\_LOADED\_MAPNAME'') executed}
+	\messageType{UPDATE_LOADED_MAPNAME}{128}{Relayed to all Userinterface types, MAKRO (''UPDATE\_LOADED\_MAPNAME'') executed (see src/sys/controller/handler.cpp)}
 	\messageType{SSLDAEMON}{129}{}
 	\messageType{VISENSO_UI}{130}{}
 	\messageType{PARAMDESC}{131}{}
@@ -202,7 +202,7 @@ Defined in \secnref{classes::message-types}
 	\messageType{VRB_MESSAGE}{139}{}
 	\messageType{VRB_PERMIT_LAUNCH}{140}{}
 	\messageType{BROADCAST_TO_PROGRAM}{141}{}
-	\messageType{NEW_UI}{142}{Processed and handled by server. Seems to request current collaborative state or list of partners, depending on parameters}
+	\messageType{NEW_UI}{142}{Processed and handled by server. Seems to request current collaborative state or list of partners, depending on parameters (see src/sys/controller/handler.cpp)}
 	\messageType{PROXY}{143}{}
 	\messageType{SOUND}{144}{}
 	\messageType{LAST_DUMMY_MESSAGE}{145}{}
