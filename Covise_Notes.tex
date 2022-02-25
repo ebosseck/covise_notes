@@ -63,7 +63,12 @@
 		\hline
 		\shandentry{aws}{?}
 		\shandentry{CRB}{Covise Request Broker}
+		\shandentry{VRB}{}
+		\shandentry{VRBC}{}
 	\end{tabular}
+
+	
+	%\inputExists{security/security.tex}
 
 	\chapter{Protocols}
 
@@ -73,6 +78,16 @@
 			\item int's are per definition IEEE int's with 4 bytes
 		\end{itemize}
 		\item Why should the sender ID not exceed 3 bytes ? Looking at the protocol, there should be 4 bytes available in the protocol (both UDPMessage as well as regular Messages). 
+	\end{itemize}
+
+	\chapter{Open Questions}
+
+	\begin{itemize}
+		\item General Code Organisation
+		\begin{itemize}
+			\item What components are in src/sys ?
+			
+		\end{itemize}
 	\end{itemize}
 
 \end{document}

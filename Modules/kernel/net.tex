@@ -1,3 +1,4 @@
+% !TeX root = ../../Covise_Notes.tex
 \renewcommand{\namespace}{kernel::net::}
 
 
@@ -94,10 +95,10 @@ Defined in \secnref{classes::message-types}
 	\messageType{OBJECT_TRANSFER}{28}{}
 	\messageType{OBJECT_FOLLOWS}{29}{}
 	\messageType{OBJECT_OK}{30}{}
-	\messageType{CLOSE_SOCKET}{31}{Should be ignored if send to the server (see src/sys/controller/handler.cpp, handleMsg, ln 246}
+	\messageType{CLOSE_SOCKET}{31}{Should be ignored if send to the server (see src/sys/controller/handler.cpp, handleMsg, ln 246), removes the client from the session in VRB Server (See kernel/vrb/server/VrbMessageHandler.cpp)}
 	\messageType{DESTROY_OBJECT}{32}{}
 	\messageType{CTRL_DESTROY_OBJECT}{33}{}
-	\messageType{QUIT}{34}{QUIT message from user interface, opencover or other sources. Handled by server, depending on parameters. Quits the current session. (see src/sys/controller/handler.cpp)}
+	\messageType{QUIT}{34}{QUIT message from user interface, opencover or other sources. Handled by server, depending on parameters. Quits the current session. (see src/sys/controller/handler.cpp), removes the client from the session in VRB Server (See kernel/vrb/server/VrbMessageHandler.cpp)}
 	\messageType{START}{35}{}
 	\messageType{COVISE_ERROR}{36}{Sent to all modules as \lstinline|COVISE_MESSAGE_COVISE_ERROR|. In case of error overflow, the info that there is overflow is sent instead (see src/sys/controller/handler.cpp)}
 	\messageType{INOBJ}{37}{}
@@ -108,7 +109,7 @@ Defined in \secnref{classes::message-types}
 	\messageType{ADD_OBJECT}{42}{}
 	\messageType{DELETE_OBJECT}{43}{}
 	\messageType{NEW_OBJECT_VERSION}{44}{}
-	\messageType{RENDER}{45}{Forwarded to all other renderers by the server (see src/sys/controller/handler.cpp)}
+	\messageType{RENDER}{45}{Forwarded to all other renderers by the server (see src/sys/controller/handler.cpp), Passed to all Participants in VRB Server (See kernel/vrb/server/VrbMessageHandler.cpp)}
 	\messageType{WAIT_CONTACT}{46}{}
 	\messageType{PARINFO}{47}{send message to all userinterfaces (see src/sys/controller/handler.cpp)}
 	\messageType{MAKE_DATA_CONNECTION}{48}{}
@@ -147,7 +148,7 @@ Defined in \secnref{classes::message-types}
 	\messageType{HOSTID}{81}{}
 	\messageType{MODULE_STARTED}{82}{}
 	\messageType{GET_USER}{83}{}
-	\messageType{SOCKET_CLOSED}{84}{Should be ignored if send to the server (see src/sys/controller/handler.cpp, handleMsg, ln 246 (see src/sys/controller/handler.cpp)}
+	\messageType{SOCKET_CLOSED}{84}{Should be ignored if send to the server (see src/sys/controller/handler.cpp, handleMsg, ln 246 (see src/sys/controller/handler.cpp), removes the client from the session in VRB Server (See kernel/vrb/server/VrbMessageHandler.cpp)}
 	\messageType{NEW_COVISED}{85}{}
 	\messageType{USER_LIST}{86}{}
 	\messageType{STARTUP_INFO}{87}{}
@@ -155,56 +156,56 @@ Defined in \secnref{classes::message-types}
 	\messageType{WRITE_SCRIPT}{89}{}
 	\messageType{CRB}{90}{}
 	\messageType{GENERIC}{91}{Evaluated for Keywords, and handled accordingly. Message Body is parsed (see src/sys/controller/handler.cpp)}
-	\messageType{RENDER_MODULE}{92}{Forwarded to all other renderers by the server (see src/sys/controller/handler.cpp)}
+	\messageType{RENDER_MODULE}{92}{Forwarded to all other renderers by the server (see src/sys/controller/handler.cpp), Passed to all Participants in VRB Server (See kernel/vrb/server/VrbMessageHandler.cpp)}
 	\messageType{FEEDBACK}{93}{Messages from Renderer sent to a module. Message is parsed and sent to the specified module (see src/sys/controller/handler.cpp)}
 	\messageType{VRB_CONTACT}{94}{Initialise connection from client}
-	\messageType{VRB_CONNECT_TO_COVISE}{95}{}
+	\messageType{VRB_CONNECT_TO_COVISE}{95}{Connect to covise. Message is partly parsed for an IP, rest of message is forewarded to client with the given IP}
 	\messageType{END_IMM_CB}{96}{}
 	\messageType{NEW_DESK}{97}{}
-	\messageType{VRB_SET_USERINFO}{98}{}
-	\messageType{VRB_GET_ID}{99}{}
+	\messageTypeDep{VRB_SET_USERINFO}{98}{Contains Information about clients connected to the server. Sending this message type to the server is deprecated, the server itself is still using it to send messages to clients}
+	\messageType{VRB_GET_ID}{99}{Returns a new private session ID if the message originated from a connection \todo{Check, code seems not too clear}}
 	\messageType{VRB_SET_GROUP}{100}{}
 	\messageType{VRB_QUIT}{101}{}
-	\messageType{VRB_SET_MASTER}{102}{}
+	\messageType{VRB_SET_MASTER}{102}{Determines new master state and informs all clients in session about new master}
 	\messageType{VRB_GUI}{103}{}
 	\messageType{VRB_CLOSE_VRB_CONNECTION}{104}{}
-	\messageType{VRB_REQUEST_FILE}{105}{}
-	\messageType{VRB_SEND_FILE}{106}{}
-	\messageTypeDep{VRB_CURRENT_FILE}{107}{use \lstinline|COVISE_MESSAGE_VRB_REQUEST _FILE| and sharedState \lstinline|coVRFileManager_filePaths| instead. Should write to standard error, then abort execution. (See kernel/vrb/server/VrbMessageHandler.cpp)}
+	\messageType{VRB_REQUEST_FILE}{105}{Requests the contents of a file from the server. (See kernel/vrb/server/VrbMessageHandler.cpp)}
+	\messageType{VRB_SEND_FILE}{106}{Forewards the message to the client requesting the file. MessageBody is parsed. (See kernel/vrb/server/VrbMessageHandler.cpp)}
+	\messageTypeDep{VRB_CURRENT_FILE}{107}{use \lstinline|COVISE_MESSAGE_VRB_REQUEST _FILE| and sharedState \lstinline|coVRFileManager_filePaths| instead. (See kernel/vrb/server/VrbMessageHandler.cpp)}
 	\messageType{CRB_QUIT}{108}{}
 	\messageType{REMOVED_HOST}{109}{}
 	\messageType{START_COVER_SLAVE}{110}{}
 	\messageType{VRB_REGISTRY_ENTRY_CHANGED}{111}{}
 	\messageType{VRB_REGISTRY_ENTRY_DELETED}{112}{}
-	\messageType{VRB_REGISTRY_SUBSCRIBE_CLASS}{113}{}
-	\messageType{VRB_REGISTRY_SUBSCRIBE_VARIABLE}{114}{}
-	\messageType{VRB_REGISTRY_CREATE_ENTRY}{115}{}
-	\messageType{VRB_REGISTRY_SET_VALUE}{116}{}
-	\messageType{VRB_REGISTRY_DELETE_ENTRY}{117}{}
-	\messageType{VRB_REGISTRY_UNSUBSCRIBE_CLASS}{118}{}
-	\messageType{VRB_REGISTRY_UNSUBSCRIBE_VARIABLE}{119}{}
+	\messageType{VRB_REGISTRY_SUBSCRIBE_CLASS}{113}{Creates an Observer for the specified class with the specified senderID and class for the given sessionID}
+	\messageType{VRB_REGISTRY_SUBSCRIBE_VARIABLE}{114}{Creates an Observer for the specified variable with the specified senderID and class for the given sessionID}
+	\messageType{VRB_REGISTRY_CREATE_ENTRY}{115}{Creates a registry entry and puts the sender in the session with the given ID.}
+	\messageType{VRB_REGISTRY_SET_VALUE}{116}{Set Registry Value on the server}
+	\messageType{VRB_REGISTRY_DELETE_ENTRY}{117}{Deletes the specified registry entry from the specified session}
+	\messageType{VRB_REGISTRY_UNSUBSCRIBE_CLASS}{118}{Stops the Observer for the specified class with the specified senderID and class for the given sessionID}
+	\messageType{VRB_REGISTRY_UNSUBSCRIBE_VARIABLE}{119}{Stops the Observer for the specified variable with the specified senderID and class for the given sessionID}
 	\messageType{SYNCHRONIZED_ACTION}{120}{}
 	\messageType{ACCESSGRID_DAEMON}{121}{}
 	\messageType{TABLET_UI}{122}{}
 	\messageType{QUERY_DATA_PATH}{123}{}
 	\messageType{SEND_DATA_PATH}{124}{}
-	\messageType{VRB_FB_RQ}{125}{}
+	\messageType{VRB_FB_RQ}{125}{Handles FileBrowser Request}
 	\messageType{VRB_FB_SET}{126}{}
-	\messageType{VRB_FB_REMREQ}{127}{}
+	\messageType{VRB_FB_REMREQ}{127}{Handles FileBrowser remote Request}
 	\messageType{UPDATE_LOADED_MAPNAME}{128}{Relayed to all Userinterface types, MAKRO (''UPDATE\_LOADED\_MAPNAME'') executed (see src/sys/controller/handler.cpp)}
 	\messageType{SSLDAEMON}{129}{}
 	\messageType{VISENSO_UI}{130}{}
 	\messageType{PARAMDESC}{131}{}
-	\messageType{VRB_REQUEST_NEW_SESSION}{132}{}
+	\messageType{VRB_REQUEST_NEW_SESSION}{132}{Creates a new (public) session for this client}
 	\messageType{VRBC_SET_SESSION}{133}{}
-	\messageType{VRBC_SEND_SESSIONS}{134}{}
+	\messageType{VRBC_SEND_SESSIONS}{134}{Contains information about all available sessions}
 	\messageType{VRBC_CHANGE_SESSION}{135}{}
 	\messageType{VRBC_UNOBSERVE_SESSION}{136}{}
 	\messageType{VRB_SAVE_SESSION}{137}{}
 	\messageType{VRB_LOAD_SESSION}{138}{}
-	\messageType{VRB_MESSAGE}{139}{}
-	\messageType{VRB_PERMIT_LAUNCH}{140}{}
-	\messageType{BROADCAST_TO_PROGRAM}{141}{}
+	\messageType{VRB_MESSAGE}{139}{Passed to all Participants in VRB Server (See kernel/vrb/server/VrbMessageHandler.cpp)}
+	\messageType{VRB_PERMIT_LAUNCH}{140}{Forewards a permit-launch typed message to the client specified in the message}
+	\messageType{BROADCAST_TO_PROGRAM}{141}{Broadcasts the message to the covise::Program specified in the token buffer}
 	\messageType{NEW_UI}{142}{Processed and handled by server. Seems to request current collaborative state or list of partners, depending on parameters (see src/sys/controller/handler.cpp)}
 	\messageType{PROXY}{143}{}
 	\messageType{SOUND}{144}{}
@@ -260,12 +261,19 @@ More Precisely, the header of the message consists of 2 IEEE Ints (8 Bytes), con
 	\messageType{MIDI_STREAM}{4}{}
 \end{messagetypes}
 
-\section{Highlevel Protocol}
+\section{Highlevel Protocol (VRB Server)}
 
 \subsection{Connect}
 
 \begin{enumerate}
-	\item Send \lstinline|COVISE_MESSAGE_VRB_CONTACT|	
+	\item Client sends \lstinline|COVISE_MESSAGE_VRB_CONTACT|
+	\item Server responds with 	
+	\begin{enumerate}
+		\item Sending \lstinline|COVISE_MESSAGE_VRBC_SEND_SESSIONS| to all connected clients (probably including the newly connected client ?)
+		\item Passes on \lstinline|COVISE_MESSAGE_VRB_SET_USERINFO| to all clients (might include new client, not sure about that). \todo{Find difference between 'Sending' and 'Passing on'}
+		\item Sends \lstinline|COVISE_MESSAGE_VRB_SET_USERINFO| to newly connected client, containing information about all other clients
+		\item Send \lstinline|COVISE_MESSAGE_VRBC_SEND_SESSIONS| to newly connected client again
+	\end{enumerate}
 \end{enumerate}
 
 
