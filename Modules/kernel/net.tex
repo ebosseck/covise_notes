@@ -14,7 +14,7 @@
 
 The net folder contains basic classes related to establishing connections between client and server using sockets.
 
-\section{Protocol}
+\section{Lowlevel Protocol}
 \seclbl{protocol}
 
 \subsection{Overview}
@@ -59,14 +59,14 @@ More specifically, the Header consists of 4 IEEE ints (16 bytes):
 Defined in \secnref{classes::message-types}
 
 \begin{messagetypes}
-	\messageType{EMPTY}{-1}{}
-	\messageType{MSG_FAILED}{0}{}
-	\messageType{MSG_OK}{1}{}
-	\messageType{INIT}{2}{}
-	\messageType{FINISHED}{3}{}
+	\messageType{EMPTY}{-1}{Used as default in message constructor, should be ignored if send to the server (see src/sys/controller/handler.cpp, handleMsg, ln 246}
+	\messageType{MSG_FAILED}{0}{Generic Failed message. Used as response when an operation failed}
+	\messageType{MSG_OK}{1}{Generic success message. Used as response when an operation succeeded}
+	\messageType{INIT}{2}{First message sent in communication ? \textbf{Possibly Deprecated ?} Used in src/module/renderer/VRMLRenderer, check\_aws(), ln. 498}
+	\messageType{FINISHED}{3}{Finish message from a rendermodule (see src/sys/controller/handler.cpp, ln. 278), sends \lstinline|COVISE_MESSAGE_UI| with parameter ''FINISHED $\backslash$ n'' in case no modules are running anymore}
 	\messageType{SEND}{4}{}
 	\messageType{ALLOC}{5}{}
-	\messageType{UI}{6}{}
+	\messageType{UI}{6}{UI Messages. In case body starts with ''UNDO'', this is an undo-action. For more keywords, see src/sys/controller/handler.cpp, ln. 969 ff}
 	\messageType{APP_CONTACT_DM}{7}{}
 	\messageType{DM_CONTACT_DM}{8}{}
 	\messageType{SHM_MALLOC}{9}{}
@@ -91,23 +91,23 @@ Defined in \secnref{classes::message-types}
 	\messageType{OBJECT_TRANSFER}{28}{}
 	\messageType{OBJECT_FOLLOWS}{29}{}
 	\messageType{OBJECT_OK}{30}{}
-	\messageType{CLOSE_SOCKET}{31}{}
+	\messageType{CLOSE_SOCKET}{31}{Should be ignored if send to the server (see src/sys/controller/handler.cpp, handleMsg, ln 246}
 	\messageType{DESTROY_OBJECT}{32}{}
 	\messageType{CTRL_DESTROY_OBJECT}{33}{}
-	\messageType{QUIT}{34}{}
+	\messageType{QUIT}{34}{QUIT message from user interface, opencover or other sources. Handled by server, depending on parameters. Quits the current session}
 	\messageType{START}{35}{}
-	\messageType{COVISE_ERROR}{36}{}
+	\messageType{COVISE_ERROR}{36}{Sent to all modules as \lstinline|COVISE_MESSAGE_COVISE_ERROR|. In case of error overflow, the info that there is overflow is sent instead}
 	\messageType{INOBJ}{37}{}
 	\messageType{OUTOBJ}{38}{}
 	\messageType{OBJECT_NO_LONGER_USED}{39}{}
 	\messageType{SET_ACCESS}{40}{}
-	\messageType{FINALL}{41}{}
+	\messageType{FINALL}{41}{Module says it has finished. Server Side resources are released, and server sends \lstinline|COVISE_MESSAGE_UI| with parameter ''FINISHED $\backslash n$'' in case no modules are running anymore}
 	\messageType{ADD_OBJECT}{42}{}
 	\messageType{DELETE_OBJECT}{43}{}
 	\messageType{NEW_OBJECT_VERSION}{44}{}
-	\messageType{RENDER}{45}{}
+	\messageType{RENDER}{45}{Forwarded to all other renderers by the server}
 	\messageType{WAIT_CONTACT}{46}{}
-	\messageType{PARINFO}{47}{}
+	\messageType{PARINFO}{47}{send message to all userinterfaces}
 	\messageType{MAKE_DATA_CONNECTION}{48}{}
 	\messageType{COMPLETE_DATA_CONNECTION}{49}{}
 	\messageType{SHM_FREE}{50}{}
@@ -115,10 +115,10 @@ Defined in \secnref{classes::message-types}
 	\messageType{TRANSFER_PORT}{52}{}
 	\messageType{CONNECT_TRANSFERMANAGER}{53}{}
 	\messageType{STDINOUT_EMPTY}{54}{}
-	\messageType{WARNING}{55}{}
-	\messageType{INFO}{56}{}
+	\messageType{WARNING}{55}{Messages are relayed as Error to all renderers. Data will be modified by prefix ''WARNING'' and suffix ''$\backslash n$''}
+	\messageType{INFO}{56}{Messages are relayed as Error to all renderers. Data will be modified by prefix ''INFO'' and suffix ''$\backslash n$''}
 	\messageType{REPLACE_OBJECT}{57}{}
-	\messageType{PLOT}{58}{}
+	\messageType{PLOT}{58}{Forwarded to all other renderers by the server}
 	\messageType{GET_LIST_OF_INTERFACES}{59}{}
 	\messageType{USR1}{60}{}
 	\messageType{USR2}{61}{}
@@ -127,7 +127,7 @@ Defined in \secnref{classes::message-types}
 	\messageType{NEW_OBJECT_OK}{64}{}
 	\messageType{NEW_OBJECT_FAILED}{65}{}
 	\messageType{NEW_OBJECT_SHM_MALLOC_LIST}{66}{}
-	\messageType{REQ_UI}{67}{}
+	\messageType{REQ_UI}{67}{Relayed to all Userinterface types}
 	\messageType{NEW_PART_ADDED}{68}{}
 	\messageType{SENDING_NEW_PART}{69}{}
 	\messageType{FINPART}{70}{}
@@ -135,7 +135,7 @@ Defined in \secnref{classes::message-types}
 	\messageType{OBJECT_ON_HOSTS}{72}{}
 	\messageType{OBJECT_FOLLOWS_CONT}{73}{}
 	\messageType{CRB_EXEC}{74}{}
-	\messageType{COVISE_STOP_PIPELINE}{75}{}
+	\messageType{COVISE_STOP_PIPELINE}{75}{Sets the status of the module with the name from the parameters to stopping}
 	\messageType{PREPARE_CONTACT_MODULE}{76}{}
 	\messageType{MODULE_CONTACT_MODULE}{77}{}
 	\messageType{SEND_APPL_PROCID}{78}{}
@@ -144,17 +144,17 @@ Defined in \secnref{classes::message-types}
 	\messageType{HOSTID}{81}{}
 	\messageType{MODULE_STARTED}{82}{}
 	\messageType{GET_USER}{83}{}
-	\messageType{SOCKET_CLOSED}{84}{}
+	\messageType{SOCKET_CLOSED}{84}{Should be ignored if send to the server (see src/sys/controller/handler.cpp, handleMsg, ln 246}
 	\messageType{NEW_COVISED}{85}{}
 	\messageType{USER_LIST}{86}{}
 	\messageType{STARTUP_INFO}{87}{}
 	\messageType{CO_MODULE}{88}{}
 	\messageType{WRITE_SCRIPT}{89}{}
 	\messageType{CRB}{90}{}
-	\messageType{GENERIC}{91}{}
-	\messageType{RENDER_MODULE}{92}{}
-	\messageType{FEEDBACK}{93}{}
-	\messageType{VRB_CONTACT}{94}{Anmeldung Client}
+	\messageType{GENERIC}{91}{Evaluated for Keywords, and handled accordingly. Message Body is parsed}
+	\messageType{RENDER_MODULE}{92}{Forwarded to all other renderers by the server}
+	\messageType{FEEDBACK}{93}{Messages from Renderer sent to a module. Message is parsed and sent to the specified module}
+	\messageType{VRB_CONTACT}{94}{Initialise connection from client}
 	\messageType{VRB_CONNECT_TO_COVISE}{95}{}
 	\messageType{END_IMM_CB}{96}{}
 	\messageType{NEW_DESK}{97}{}
@@ -188,7 +188,7 @@ Defined in \secnref{classes::message-types}
 	\messageType{VRB_FB_RQ}{125}{}
 	\messageType{VRB_FB_SET}{126}{}
 	\messageType{VRB_FB_REMREQ}{127}{}
-	\messageType{UPDATE_LOADED_MAPNAME}{128}{}
+	\messageType{UPDATE_LOADED_MAPNAME}{128}{Relayed to all Userinterface types, MAKRO (''UPDATE\_LOADED\_MAPNAME'') executed}
 	\messageType{SSLDAEMON}{129}{}
 	\messageType{VISENSO_UI}{130}{}
 	\messageType{PARAMDESC}{131}{}
@@ -202,7 +202,7 @@ Defined in \secnref{classes::message-types}
 	\messageType{VRB_MESSAGE}{139}{}
 	\messageType{VRB_PERMIT_LAUNCH}{140}{}
 	\messageType{BROADCAST_TO_PROGRAM}{141}{}
-	\messageType{NEW_UI}{142}{}
+	\messageType{NEW_UI}{142}{Processed and handled by server. Seems to request current collaborative state or list of partners, depending on parameters}
 	\messageType{PROXY}{143}{}
 	\messageType{SOUND}{144}{}
 	\messageType{LAST_DUMMY_MESSAGE}{145}{}
@@ -214,7 +214,7 @@ Defined in \secnref{classes::message-types}
 Defined in \secnref{classes::message-types}
 
 \begin{messagetypes}
-	\messageType{UNDEFINED}{0}{}
+	\messageType{UNDEFINED}{0}{Used as default value in message constructor}
 	\messageType{CONTROLLER}{1}{}
 	\messageType{CRB}{2}{}
 	\messageType{USERINTERFACE}{3}{}
@@ -232,6 +232,8 @@ Defined in \secnref{classes::message-types}
 
 \subsection{UDP Message}
 \seclbl{protocol::udpmessage}
+
+UDP Messages were included for the first attempt of porting covise network code to c\#.
 
 \subsubsection{UDP Message Format}
 \seclbl{protocol::udpmessage::udpmessage-format}
@@ -254,6 +256,15 @@ More Precisely, the header of the message consists of 2 IEEE Ints (8 Bytes), con
 	\messageType{AUDIO_STREAM}{3}{}
 	\messageType{MIDI_STREAM}{4}{}
 \end{messagetypes}
+
+\section{Highlevel Protocol}
+
+\subsection{Connect}
+
+\begin{enumerate}
+	\item Send \lstinline|COVISE_MESSAGE_VRB_CONTACT|	
+\end{enumerate}
+
 
 \section{Classes}
 \seclbl{classes}

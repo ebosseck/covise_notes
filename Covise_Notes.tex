@@ -28,6 +28,9 @@
 \newcommand{\seclbl}[1]{\label{\resolveNS{#1}}}
 \newcommand{\secnref}[1]{\nameref{\resolveNS{#1}}}
 
+\newcommand{\shand}[1]{\nameref{intern::shorthands::#1}}
+\newcommand{\shandentry}[2]{\label{intern::shorthands::#1} #1 & #2 \\ \hline}
+
 
 \begin{document}
 	\thispagestyle{empty}
@@ -48,6 +51,17 @@
 	\chapter{vrb}
 
 	\part{Remarks}
+
+	\chapter{Shorthands}
+	
+	\begin{tabular}{||p{4cm}|p{10cm}||}
+		\hline
+		\textbf{Shorthand} & \textbf{Description}\\
+		\hline
+		\hline
+		\shandentry{aws}{?}
+		\shandentry{CRB}{Covise Request Broker}
+	\end{tabular}
 
 	\chapter{Protocols}
 
