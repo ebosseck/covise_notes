@@ -20,8 +20,8 @@
 
 \input{res/theme.tex}
 
-\setcounter{tocdepth}{5}
-\setcounter{secnumdepth}{5}
+\setcounter{tocdepth}{6}
+\setcounter{secnumdepth}{6}
 
 \newcommand{\namespace}{}
 \newcommand{\resolveNS}[1]{\namespace#1}
@@ -63,17 +63,17 @@
 		\hline
 		\shandentry{aws}{?}
 		\shandentry{CRB}{Covise Request Broker}
-		\shandentry{VRB}{}
+		\shandentry{VRB}{Virtual Reality Request Broker}
 		\shandentry{VRBC}{}
 	\end{tabular}
 
 	
-	%\inputExists{security/security.tex}
+%	\inputExists{security/security.tex}
 
 	\chapter{Protocols}
 
 	\begin{itemize}
-		\item In order to ensure format compatibility, the code has to be compiled with a c++ compiler which implements 'int' as 32-bit value, correct ? Otherwise, the byte offsets in the protocol defined in net would not match the expectations. (e.g. in headder of udp messages)
+		\item In order to ensure format compatibility, the code has to be compiled with a c++ compiler which implements 'int' as 32-bit IEEE int.
 		\begin{itemize}
 			\item int's are per definition IEEE int's with 4 bytes
 		\end{itemize}
@@ -86,8 +86,33 @@
 		\item General Code Organisation
 		\begin{itemize}
 			\item What components are in src/sys ?
-			
 		\end{itemize}
+		\item Format of Data/TB Type ?
+		\begin{itemize}
+			\item Probably:
+			\begin{itemize}
+				\item Int32 Length
+				\item byte[Length] data in TokenBuffer Format
+			\end{itemize}
+		\end{itemize}
+		\item Determine TokenBuffer Format
+		\begin{itemize}
+			\item Are type bytes only in Debug Mode Present ?
+			\item First byte without Type: TokenBuffer Debug protocol Flag ?
+			\item What effects does this have on the protocol ? $\rightarrow$ Are VRB in Debug TB mode and Covise without Debug TB mode able to communicate ?
+			\item is the debug byte always present, or is it only in Debug mode present ?
+			\item Perhaps redesign to Protocol flags in CONTACT or SET\_USER\_INFO ? Esp. in case debug is not always present. (not just zero but alltogether missing)
+			\item Why ????....
+		\end{itemize}
+	\end{itemize}
+
+	\chapter{Whishlist}
+	
+	\section{Network Protocol}
+	
+	\begin{itemize}
+		\item Versioning of Protocol, e.g. in initial server connection. Version should be increased with all breaking changes. This way users can be warned if their software uses an old protocol version
+		\item Foreward/Backward Compatibility of messages. Changes for this sould probably have to be implemented in Tokenbuffer in form of either an quick index to declare which data is where, or by adding a struct type to serialiser, and then keeping the data layout within a single struct append-only. With the struct type, the fields are append-only within a struct, and not for the whole message. (which could lead to problems using the serialiser for serialising entire objects)
 	\end{itemize}
 
 \end{document}

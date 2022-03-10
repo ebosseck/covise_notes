@@ -16,6 +16,54 @@
 \newcommand{\messageTypeDep}[3]{\rowcolor{linedeprecated}\lstinline|#1| & #2 & \color{red}\textbf{!!! DEPRECATED !!! DO NOT USE !!!}\color{black}, #3 \\
 	\hline}
 
+\newcommand{\paramfour}[4]{#1 & \texttt{#2} & \textsl{#3} & #4 \\\hline}
+
+\newcommand{\dtypeBOOL}[1]{#1 & \texttt{DataType BOOL} & \textsl{byte} & The next token is to be interpreted as bool, \textbf{Value = 0x07} \\\hline}
+\newcommand{\dtypeLONG}[1]{#1 & \texttt{DataType INT64} & \textsl{byte} & The next token is to be interpreted as int64, \textbf{Value = 0x08} \\\hline}
+\newcommand{\dtypeINT}[1]{#1 & \texttt{DataType INT32} & \textsl{byte} & The next token is to be interpreted as int32, \textbf{Value = 0x09} \\\hline}
+\newcommand{\dtypeFLOAT}[1]{#1 & \texttt{DataType FLOAT} & \textsl{byte} & The next token is to be interpreted as float, \textbf{Value = 0x0a} \\\hline}
+\newcommand{\dtypeDOUBLE}[1]{#1 & \texttt{DataType DOUBLE} & \textsl{byte} & The next token is to be interpreted as double, \textbf{Value = 0x0b} \\\hline}
+\newcommand{\dtypeSTRING}[1]{#1 & \texttt{DataType STRING} & \textsl{byte} & The next token is to be interpreted as string, \textbf{Value = 0x0c} \\\hline}
+\newcommand{\dtypeCHAR}[1]{#1 & \texttt{DataType CHAR} & \textsl{byte} & The next token is to be interpreted as char, \textbf{Value = 0x0d} \\\hline}
+\newcommand{\dtypeDATA}[1]{#1 & \texttt{DataType DATA} & \textsl{byte} & The next token is to be interpreted as DataHandle / TokenBuffer, \textbf{Value = 0x0e} \\\hline}
+\newcommand{\dtypeBINARY}[1]{#1 & \texttt{DataType BINARY} & \textsl{byte} & The next token is to be interpreted as Binary Data, \textbf{Value = 0x0f} \\\hline}
+
+
+\newcommand{\createStructName}[1]{struct#1}
+\newcommand{\definestruct}[2]{\expandafter\def\csname\createStructName{#1}\endcsname{\rowcolor{sendstruct.subhead} \multicolumn{4}{||c||}{\textsc{Struct #1}}\\ \hline #2 \rowcolor{sendstruct.subhead} \multicolumn{4}{||c||}{\textsc{End of struct #1}}\\ \hline} \begin{structenv}{#1} \relax #2\end{structenv}}
+
+\newcommand{\listparam}[2]{\rowcolor{sendstruct.list} \multicolumn{4}{||c||}{\textsc{List[#1]}}\\ \hline #2 \rowcolor{sendstruct.list} \multicolumn{4}{||c||}{\textsc{End of List}}\\ \hline}
+
+%\newenvironment{tcpmessage}{\rowcolors{2}{send.light}{send.dark}\paragraph*{AAA}\mbox{}\\
+%	\begin{longtable}{||p{2cm}|p{4cm}|p{3cm}|p{5cm}||}
+%		\rowcolor{send.head} \hline \textbf{Index} & \textbf{Name} & \textbf{Type}& \textbf{Description} \\
+%		\hline\hline
+%		\paramfour{0..3}{sender}{4 byte}{}
+%		\paramfour{4..7}{sender_type}{4 byte}{}
+%		\paramfour{8..11}{message_type}{4 byte}{MessageType 00: AAA}
+%		\paramfour{12..15}{length}{4 byte}{}
+%		\hline
+%	}{\end{longtable}}
+
+
+\newenvironment{structenv}[2]{\rowcolors{2}{struct.light}{struct.dark} \paragraph{#1}\mbox{}\\ \begin{longtable}{||p{2cm}|p{4cm}|p{2cm}|p{6cm}||}
+		\hline \rowcolor{struct.head} \textbf{Index} & \textbf{Name} & \textbf{Type}& \textbf{Description} \\
+		\hline\hline
+	}{\end{longtable}}
+
+\newenvironment{tcpmessage}[2]{\rowcolors{2}{send.light}{send.dark} \paragraph{#1 (Type #2)}\mbox{}\\ \begin{longtable}{||p{2cm}|p{4cm}|p{2cm}|p{6cm}||}
+		\hline \rowcolor{send.head} \textbf{Index} & \textbf{Name} & \textbf{Type}& \textbf{Description} \\
+		\hline\hline
+		\rowcolor{send.subhead} \multicolumn{4}{||c||}{\textbf{HEADER}} \\
+		\hline
+			\paramfour{0..3}{sender}{int32}{Sender ID, max 3 byte verwenden}
+			\paramfour{4..7}{sender\_type}{int32}{Sender Type}
+			\paramfour{8..11}{message\_type}{int32}{MessageType #2:\newline #1}
+			\paramfour{12..15}{length}{int32}{Length of payload in Bytes}
+			\rowcolor{send.subhead} \multicolumn{4}{||c||}{\textbf{PAYLOAD}} \\
+			\hline
+}{\end{longtable}}
+
 The net folder contains basic classes related to establishing connections between client and server using sockets.
 
 \section{Lowlevel Protocol}
@@ -28,7 +76,7 @@ TCP Connection for regular messages, UDP Connection for UDP Messages, Optional w
 There exist at least 2 distinct message types: Messages and UDP Messages. UDP Messages are regular messages with a stripped down header sent using the udp protocol (UDP Messages were introduced in May 2019, while regular messages exist since 1993).
 
 The Default port used is 31000.
-
+The Default port used for VRB is 31800 for TCP and 31801 for UDP.
 
 
 \subsection{Message}
@@ -234,6 +282,68 @@ Defined in \secnref{classes::message-types}
 	\messageType{ANY}{}{}
 \end{messagetypes}
 
+\subsubsection{Structs}
+
+\definestruct{SessionID}{
+	\dtypeSTRING{}
+	\paramfour{}{Session Name}{str}{Value = '''' (Empty String)}
+	\dtypeINT{}
+	\paramfour{}{Session Owner}{int32}{Value = 0}
+	\dtypeBOOL{}
+	\paramfour{}{Session Is Private}{bool}{Value = True}
+	\dtypeINT{}
+	\paramfour{}{Session Master}{int32}{Value = 0}}
+
+\definestruct{UserInfo}{
+	\dtypeINT{}
+	\paramfour{}{userType}{int32}{ProgramType Enum. Valid values range from }
+	\dtypeSTRING{}
+	\paramfour{}{userName}{str}{ASCII-Encoded string containing the username}
+	\dtypeSTRING{}
+	\paramfour{}{ipAddress}{str}{ASCII-Encoded string containing the user's IP Address}
+	\dtypeSTRING{}
+	\paramfour{}{hostname}{str}{ASCII-Encoded string containing the user's hostname}
+	\dtypeSTRING{}
+	\paramfour{}{emailAddress}{str}{ASCII-Encoded string containing the user's EMail-Address}
+	\dtypeSTRING{}
+	\paramfour{}{url}{str}{ASCII-Encoded string containing the user's url}}
+
+\subsubsection{MessageType Parameters}
+
+List of all message Types and their bodys
+
+\begin{tcpmessage}{VRB\_CONTACT}{94}
+	\paramfour{16}{Debugmode enabled}{byte}{Value = 1 $\Rightarrow$ Tokenbuffer is in Debug format}
+	\dtypeINT{17}
+	\paramfour{18..21}{RemoteClient ID}{int32}{ID of the remote Client}
+	\structSessionID
+	\structUserInfo
+\end{tcpmessage}
+
+\begin{tcpmessage}{VRB\_SET\_USERINFO}{98}
+	\paramfour{16}{Debugmode enabled}{byte}{Value = 1 $\Rightarrow$ Tokenbuffer is in Debug format}
+	\dtypeINT{}
+	\paramfour{}{clientCount}{int}{Number of Clients in VRB's client list}
+	\dtypeINT{}
+	\paramfour{}{recipientPos}{int}{Position of recipient in Client list}
+	
+	\listparam{sessionCount}{
+	\dtypeINT{}
+	\paramfour{}{RemoteClient ID}{int}{}
+	\structSessionID
+	\structSessionID}
+\end{tcpmessage}
+
+Where the first session ID for each session is the (possibly public) session ID, and the second sessionID is the private session ID. 
+
+\begin{tcpmessage}{VRB\_SEND\_SESSIONS}{134}
+	\paramfour{16}{Debugmode enabled}{byte}{Value = 1 $\Rightarrow$ Tokenbuffer is in Debug format}
+	\dtypeINT{}
+	\paramfour{}{sessionCount}{int}{Number of Sessions currently active}
+	\listparam{sessionCount}{\structSessionID}
+	
+\end{tcpmessage}
+
 \subsection{UDP Message}
 \seclbl{protocol::udpmessage}
 
@@ -266,11 +376,13 @@ More Precisely, the header of the message consists of 2 IEEE Ints (8 Bytes), con
 \subsection{Connect}
 
 \begin{enumerate}
+	\item Server sends \lstinline|0x01| (Single byte with value 1)
+	\item Client sends \lstinline|0x01| (Single byte with value 1)
 	\item Client sends \lstinline|COVISE_MESSAGE_VRB_CONTACT|
 	\item Server responds with 	
 	\begin{enumerate}
-		\item Sending \lstinline|COVISE_MESSAGE_VRBC_SEND_SESSIONS| to all connected clients (probably including the newly connected client ?)
-		\item Passes on \lstinline|COVISE_MESSAGE_VRB_SET_USERINFO| to all clients (might include new client, not sure about that). \todo{Find difference between 'Sending' and 'Passing on'}
+		\item Sending \lstinline|COVISE_MESSAGE_VRBC_SEND_SESSIONS| to all connected clients (Including newly connected Client)
+		\item Passes on \lstinline|COVISE_MESSAGE_VRB_SET_USERINFO| to all clients (Including newly connected Client). \todo{Find difference between 'Sending' and 'Passing on'}
 		\item Sends \lstinline|COVISE_MESSAGE_VRB_SET_USERINFO| to newly connected client, containing information about all other clients
 		\item Send \lstinline|COVISE_MESSAGE_VRBC_SEND_SESSIONS| to newly connected client again
 	\end{enumerate}
@@ -296,7 +408,7 @@ Definition of standart message
 Definition of message- and sender- types 
 
 \subsection{udp\_message\_types}
-\seclbl{classes::udp-message}
+\seclbl{classes::udp-message-types}
 Definition of udp message- and sender- types 
 
 \subsection{udpMessage}
@@ -308,7 +420,5 @@ Definition of udp message
 
 \begin{itemize}
 	\item File is inconsitently named using CamelCase instead of underscores as seperators
+	\item In case the Connect high level protocol is not followed (esp. if the single byte message without header is not sent first, the VRB UI becomes unresponsive without any (visible) warning, e.g. in the console)
 \end{itemize}
-
-\subsection{udp\_message\_types}
-\seclbl{classes::udp-message-types}
