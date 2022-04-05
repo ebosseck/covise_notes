@@ -58,7 +58,7 @@
 		\hline
 			\paramfour{0..3}{sender}{int32}{Sender ID, max 3 byte verwenden}
 			\paramfour{4..7}{sender\_type}{int32}{Sender Type}
-			\paramfour{8..11}{message\_type}{int32}{MessageType #2:\newline #1}
+			\paramfour{8..11}{message\_type}{int32}{MessageType #2} % \newline #1
 			\paramfour{12..15}{length}{int32}{Length of payload in Bytes}
 			\rowcolor{send.subhead} \multicolumn{4}{||c||}{\textbf{PAYLOAD}} \\
 			\hline
@@ -336,6 +336,112 @@ List of all message Types and their bodys
 
 Where the first session ID for each session is the (possibly public) session ID, and the second sessionID is the private session ID. 
 
+\begin{tcpmessage}{VRB\_REGISTRY\_ENTRY\_CHANGED}{111}
+	\dtypeINT{}
+	\paramfour{}{Class ID}{int32}{ID of the class}
+	\dtypeSTRING{}
+	\paramfour{}{Class Name}{str}{Name of the class whose variable changed}
+	\dtypeSTRING{}
+	\paramfour{}{name}{str}{Name of the variable that changed}
+	\dtypeDATA{}
+	\paramfour{}{data}{DataHandle}{New Data of the changed Variable}
+\end{tcpmessage}
+
+\begin{tcpmessage}{VRB\_REGISTRY\_ENTRY\_DELETED}{112}
+	\dtypeINT{}
+	\paramfour{}{Class ID}{int32}{ID of the class}
+	\dtypeSTRING{}
+	\paramfour{}{Class Name}{str}{Name of the class whose variable changed}
+	\dtypeSTRING{}
+	\paramfour{}{name}{str}{Name of the variable that changed}
+	\dtypeDATA{}
+	\paramfour{}{data}{DataHandle}{New Data of the changed Variable}
+\end{tcpmessage}
+
+\begin{tcpmessage}{VRB\_REGISTRY\_SUBSCRIBE\_CLASS}{113}
+	\structSessionID
+	\dtypeINT{}
+	\paramfour{}{classID}{int32}{ID of the class to subscribe to ? }
+	\dtypeSTRING{}
+	\paramfour{}{name}{str}{Name of the class to subscribe to}
+\end{tcpmessage}
+
+\begin{tcpmessage}{VRB\_REGISTRY\_SUBSCRIBE\_VARIABLE}{114}
+	\structSessionID
+	\dtypeINT{}
+	\paramfour{}{id}{int32}{Class ID}
+	\dtypeSTRING{}
+	\paramfour{}{class name}{str}{Name of the variable's class to subscribe to}
+	\dtypeSTRING{}
+	\paramfour{}{name}{str}{Name of the variable}
+\end{tcpmessage}
+
+\begin{tcpmessage}{VRB\_REGISTRY\_CREATE\_ENTRY}{115}
+	\structSessionID
+	\dtypeINT{}
+	\paramfour{}{ClientID}{int32}{}
+	\dtypeSTRING{}
+	\paramfour{}{cl}{str}{Class ?}
+	\dtypeSTRING{}
+	\paramfour{}{var}{str}{Variable Name}
+	\dtypeDATA{}
+	\paramfour{}{value}{DataHandle}{Data of the variable}
+	\dtypeBOOL{}
+	\paramfour{}{isStatic}{bool}{if True, variable is considered static}
+\end{tcpmessage}
+
+\begin{tcpmessage}{VRB\_REGISTRY\_SET\_VALUE}{116}
+	\structSessionID
+	\dtypeINT{}
+	\paramfour{}{Client ID}{int32}{Local client ID}
+	\dtypeSTRING{}
+	\paramfour{}{cl}{str}{Class name}
+	\dtypeSTRING{}
+	\paramfour{}{var}{str}{Variable name}
+	\dtypeDATA{}
+	\paramfour{}{value}{DataHandle}{New Data of the variable}
+\end{tcpmessage}
+
+\begin{tcpmessage}{VRB\_REGISTRY\_DELETE\_ENTRY}{117}
+	\structSessionID
+	\dtypeINT{}
+	\paramfour{}{Client ID}{int32}{Local client ID}
+	\dtypeSTRING{}
+	\paramfour{}{cl}{str}{Class name}
+	\dtypeSTRING{}
+	\paramfour{}{var}{str}{Variable name}
+\end{tcpmessage}
+
+\begin{tcpmessage}{VRB\_REGISTRY\_UNSUBSCRIBE\_CLASS}{118}
+	\structSessionID
+	\dtypeINT{}
+	\paramfour{}{Client ID}{int32}{Local client ID}
+	\dtypeSTRING{}
+	\paramfour{}{cl}{str}{Class name}
+\end{tcpmessage}
+
+\begin{tcpmessage}{VRB\_REGISTRY\_UNSUBSCRIBE\_VARIABLE}{119}
+		\structSessionID
+	\dtypeINT{}
+	\paramfour{}{Client ID}{int32}{Local client ID}
+	\dtypeSTRING{}
+	\paramfour{}{cl}{str}{Class name}
+	\dtypeSTRING{}
+	\paramfour{}{var}{str}{Variable name}
+\end{tcpmessage}
+
+\begin{tcpmessage}{VRB\_REQUEST\_NEW\_SESSION}{132}
+	\structSessionID
+\end{tcpmessage}
+
+Requests the creation of a new public session. The SessionID is for the to be created public session
+
+\begin{tcpmessage}{VRBC\_SET\_SESSION}{133}
+	\dtypeINT{}
+	\paramfour{}{\color{red}Sender ID}{int}{\color{red}ID of the message's sender ?}
+	\structSessionID
+\end{tcpmessage}
+
 \begin{tcpmessage}{VRB\_SEND\_SESSIONS}{134}
 	\paramfour{16}{Debugmode enabled}{byte}{Value = 1 $\Rightarrow$ Tokenbuffer is in Debug format}
 	\dtypeINT{}
@@ -388,6 +494,13 @@ More Precisely, the header of the message consists of 2 IEEE Ints (8 Bytes), con
 	\end{enumerate}
 \end{enumerate}
 
+\subsection{Create Public Session}
+
+\begin{enumerate}
+	\item Client sends \lstinline|VRB_REQUEST_NEW_SESSION| to Server
+	\item Server sends \lstinline|VRB_SEND_SESSIONS| to all
+	\item Server responds with \lstinline|VRBC_SET_SESSION| to client
+\end{enumerate}
 
 \section{Classes}
 \seclbl{classes}
